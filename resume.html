@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人简历</title>
+    <link rel="stylesheet" href="styles-resume.css"> <!-- 连接CSS文件 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        .video-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            background-color: #000;
+        }
+
+        #myVideo {
+            width: 100%;
+            display: block;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-wrapper:hover .video-controls {
+            opacity: 1;
+        }
+
+        .play-pause-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            border-radius: 2.5px;
+        }
+
+        .progress {
+            height: 100%;
+            background: #007bff;
+            border-radius: 2.5px;
+            width: 0;
+        }
+
+        .time-display {
+            color: white;
+            font-size: 14px;
+            min-width: 100px;
+            text-align: right;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .volume-slider {
+            width: 60px;
+            height: 5px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2.5px;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .fullscreen-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+
+        /* Carousel Styles */
+        #slideshow {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #slideshow img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            object-position: center;
+            max-width: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #slideshow img.active {
+            opacity: 1;
+        }
+
+        #slideshow .slide-text {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Tom Guo 简历</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#personal-info">个人简介</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#skills">技能</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#education">教育背景</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#work-experience">工作经历</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html" id="loginLink">登录</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="resume-container">
+        <!-- 头部 -->
+        <header class="resume-header">
+            <h1>Tom Guo</h1>
+            <p>Shanghai, China 200000</p>
+            <p>(+86)18210787405 | guomengtao@gmail.com</p>
+            <p><a href="https://www.udemy.com/laravavel56" target="_blank">www.udemy.com/laravavel56</a> | <a href="https://youtube.com/@guomengtao" target="_blank">youtube.com/@guomengtao</a></p>
+        </header>
+        <div id="slideshow">
+            <img src="images/slide1.jpg" alt="第一张图片" class="active">
+            <p class="slide-text">第一张图片的描述文字</p>
+        </div>
+        <!-- 个人信息 -->
+        <section class="personal-info" id="personal-info">
+            <h2>个人简介</h2>
+            <p>前端和全栈技术。正在Udemy上学习视频讲座。已教授超过500门课程，拥有超过10,000名学生。</p>
+        </section>
+
+        <!-- 技能 -->
+        <section class="skills" id="skills">
+            <h2>技能</h2>
+            <ul>
+                <li>PHP of Laravel</li>
+                <li>Javascript and Bootstrap</li>
+                <li>Python3 of Django</li>
+                <li>Java of JavaEE</li>
+            </ul>
+        </section>
+
+        <!-- 教育背景 -->
+        <section class="education" id="education">
+            <h2>教育背景</h2>
+            <ul>
+                <li>中国开放大学，北京 - 大专<br>2022年3月 - 2025年3月<br>专业：计算机网络技术</li>
+                <li>西藏武警总队，拉萨 - 警卫<br>2000年9月 - 2002年9月<br>武警拉萨第一支队</li>
+            </ul>
+        </section>
+
+        <!-- 工作经历 -->
+        <section class="work-experience" id="work-experience">
+            <h2>工作经历</h2>
+            <ul>
+                <li>
+                    <h3>Bio-link Pharmaceutical Application System(江苏)有限公司，苏州 - 后端工程师</h3>
+                    <p>2023年2月 - 至今</p>
+                    <ul>
+                        <li>为超过500名员工设计并构建基于云的信息系统。</li>
+                        <li>开发三套ERP和CRM销售系统的Web应用程序。</li>
+                        <li>降低软件采购成本1000万元，提高销售业绩20%。</li>
+                    </ul>
+                </li>
+                <li>
+                    <h3>Google&TDCX INFORMATION(上海)有限公司，上海 - 网站管理员</h3>
+                    <p>2021年9月 - 2022年6月</p>
+                    <ul>
+                        <li>协助Google的AGF/机器学习团队创建超过30个Google PLP英文网站。</li>
+                        <li>协助包括Shopify和Wordpress在内的超过100家Google客户为其自建网站部署GA/GTM/转化跟踪。</li>
+                        <li>帮助Google马来西亚UMM团队构建三个英文PLP网站。</li>
+                    </ul>
+                </li>
+                <!-- 其他工作经历省略 -->
+            </ul>
+        </section>
+
+        <div class="video-container">
+            <div class="video-wrapper">
+                <video id="myVideo">
+                    <source src="resume-video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-controls">
+                    <button class="play-pause-btn">
+                        <i class="bi bi-play-fill"></i>
+                    </button>
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+                    <div class="volume-control">
+                        <button class="volume-btn">
+                            <i class="bi bi-volume-up-fill"></i>
+                        </button>
+                        <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="1">
+                    </div>
+                    <div class="time-display">0:00 / 0:00</div>
+                    <button class="fullscreen-btn">
+                        <i class="bi bi-fullscreen"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const video = document.getElementById('myVideo');
+                const playPauseBtn = document.querySelector('.play-pause-btn');
+                const playPauseIcon = playPauseBtn.querySelector('i');
+                const progressBar = document.querySelector('.progress-bar');
+                const progress = document.querySelector('.progress');
+                const timeDisplay = document.querySelector('.time-display');
+                const volumeBtn = document.querySelector('.volume-btn');
+                const volumeIcon = volumeBtn.querySelector('i');
+                const volumeSlider = document.querySelector('.volume-slider');
+                const fullscreenBtn = document.querySelector('.fullscreen-btn');
+                let isMouseDown = false;
+
+                // Play/Pause
+                playPauseBtn.addEventListener('click', togglePlay);
+                video.addEventListener('click', togglePlay);
+
+                function togglePlay() {
+                    if (video.paused) {
+                        video.play();
+                        playPauseIcon.className = 'bi bi-pause-fill';
+                    } else {
+                        video.pause();
+                        playPauseIcon.className = 'bi bi-play-fill';
+                    }
+                }
+
+                // Progress bar
+                video.addEventListener('timeupdate', updateProgress);
+                progressBar.addEventListener('click', seek);
+                progressBar.addEventListener('mousedown', () => isMouseDown = true);
+                progressBar.addEventListener('mousemove', (e) => isMouseDown && seek(e));
+                progressBar.addEventListener('mouseup', () => isMouseDown = false);
+                progressBar.addEventListener('mouseleave', () => isMouseDown = false);
+
+                function updateProgress() {
+                    const percentage = (video.currentTime / video.duration) * 100;
+                    progress.style.width = percentage + '%';
+                    timeDisplay.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+                }
+
+                function seek(e) {
+                    const percent = e.offsetX / progressBar.offsetWidth;
+                    video.currentTime = percent * video.duration;
+                }
+
+                // Volume control
+                volumeBtn.addEventListener('click', toggleMute);
+                volumeSlider.addEventListener('input', updateVolume);
+
+                function toggleMute() {
+                    video.muted = !video.muted;
+                    updateVolumeIcon();
+                }
+
+                function updateVolume() {
+                    video.volume = volumeSlider.value;
+                    video.muted = video.volume === 0;
+                    updateVolumeIcon();
+                }
+
+                function updateVolumeIcon() {
+                    if (video.muted || video.volume === 0) {
+                        volumeIcon.className = 'bi bi-volume-mute-fill';
+                    } else if (video.volume < 0.5) {
+                        volumeIcon.className = 'bi bi-volume-down-fill';
+                    } else {
+                        volumeIcon.className = 'bi bi-volume-up-fill';
+                    }
+                }
+
+                // Fullscreen
+                fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+                function toggleFullscreen() {
+                    if (!document.fullscreenElement) {
+                        video.requestFullscreen();
+                    } else {
+                        document.exitFullscreen();
+                    }
+                }
+
+                // Time formatting
+                function formatTime(seconds) {
+                    const minutes = Math.floor(seconds / 60);
+                    seconds = Math.floor(seconds % 60);
+                    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        togglePlay();
+                    } else if (e.code === 'ArrowLeft') {
+                        video.currentTime -= 5;
+                    } else if (e.code === 'ArrowRight') {
+                        video.currentTime += 5;
+                    } else if (e.code === 'ArrowUp') {
+                        video.volume = Math.min(1, video.volume + 0.1);
+                        volumeSlider.value = video.volume;
+                        updateVolumeIcon();
+                    } else if (e.code === 'ArrowDown') {
+                        video.volume = Math.max(0, video.volume - 0.1);
+                        volumeSlider.value = video.volume;
+                        updateVolumeIcon();
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            // Carousel Slideshow Script
+            document.addEventListener('DOMContentLoaded', function() {
+                // Carousel Images and Texts
+                const carouselImages = [
+                    'images/slide1.png',
+                    'images/slide2.png',
+                    'images/slide3.jpg'
+                ];
+
+                const carouselTexts = [
+                    '第一张图片的描述文字',
+                    '第二张图片的描述文字',
+                    '第三张图片的描述文字'
+                ];
+
+                // Get Slideshow Elements
+                const slideshow = document.getElementById('slideshow');
+                const slideshowImage = slideshow.querySelector('img');
+                const slideshowText = slideshow.querySelector('.slide-text');
+
+                let currentSlide = 0;
+
+                // Next Image Function
+                function nextImage() {
+                    // Update Image
+                    slideshowImage.src = carouselImages[currentSlide];
+                    slideshowImage.classList.remove('active');
+
+                    // Trigger reflow to ensure transition works
+                    void slideshowImage.offsetWidth;
+
+                    setTimeout(() => {
+                        slideshowImage.classList.add('active');
+                    }, 50);
+
+                    // Update Text
+                    slideshowText.textContent = carouselTexts[currentSlide];
+
+                    // Move to next slide
+                    currentSlide = (currentSlide + 1) % carouselImages.length;
+                }
+
+                // Start Slideshow
+                nextImage(); // Show first image
+                const slideshowInterval = setInterval(nextImage, 3000);
+
+                // Pause on Hover
+                slideshow.addEventListener('mouseenter', () => {
+                    clearInterval(slideshowInterval);
+                    slideshow.classList.add('paused');
+                });
+
+                // Resume on Mouse Leave
+                slideshow.addEventListener('mouseleave', () => {
+                    // Resume slideshow
+                    const resumedInterval = setInterval(nextImage, 3000);
+                    slideshow.classList.remove('paused');
+                });
+            });
+        </script>
+
+        <script>
+            // 页面加载时检查登录状态
+            document.addEventListener('DOMContentLoaded', function() {
+                const loginLink = document.getElementById('loginLink');
+                
+                // 检查本地存储中的登录状态
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                const username = localStorage.getItem('username');
+                
+                if (isLoggedIn && username) {
+                    // 已登录状态
+                    loginLink.innerHTML = `Welcome, ${username} | 退出`;
+                    loginLink.href = '#';
+                    
+                    // 添加退出功能
+                    loginLink.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        // 清除登录状态
+                        localStorage.removeItem('isLoggedIn');
+                        localStorage.removeItem('username');
+                        
+                        // 重置链接
+                        loginLink.innerHTML = '登录';
+                        loginLink.href = 'login.html';
+                    });
+                }
+            });
+        </script>
+    </body>
+</html>

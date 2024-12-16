@@ -1,0 +1,166 @@
+/* styles.css */
+
+/* 全局样式 */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.resume-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 头部样式 */
+.resume-header {
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.resume-header h1 {
+    font-size: 2.5em;
+    margin: 0;
+}
+
+.resume-header p {
+    font-size: 1em;
+    margin: 5px 0;
+}
+
+.resume-header a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.resume-header a:hover {
+    text-decoration: underline;
+}
+
+/* 个人信息、技能、教育背景和工作经历样式 */
+section {
+    margin-bottom: 30px;
+}
+
+section h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #007bff;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+section ul {
+    list-style: none;
+    padding: 0;
+}
+
+section ul li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+}
+
+section ul li::before {
+    content: "•";
+    color: #007bff;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+section ul li h3 {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+}
+
+section ul li p {
+    margin: 0;
+}
+
+section ul li ul {
+    margin-top: 10px;
+}
+
+section ul li ul li {
+    margin-bottom: 5px;
+    padding-left: 0;
+}
+
+section ul li ul li::before {
+    content: "";
+}
+
+/* 动画效果 */
+section h2 {
+    transition: color 0.3s, border-bottom-color 0.3s;
+}
+
+section:hover h2 {
+    color: #ff6347;
+    border-bottom-color: #ff6347;
+}
+
+/* Custom Navbar Styles */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #333 !important;
+}
+
+.nav-link {
+    color: #666 !important;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #007bff !important;
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Resume Container Enhancements */
+.resume-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* Section Styling */
+.personal-info, 
+.skills, 
+.education, 
+.work-experience {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .resume-container {
+        padding: 10px;
+    }
+    
+    .navbar-nav {
+        text-align: center;
+    }
+}
