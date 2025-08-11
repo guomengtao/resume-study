@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My English Links — Minimal Bookmark Hub</title>
+  <style>
+    :root{
+      --bg:#f7f7f8; --card:#ffffff; --muted:#6b7280; --accent:#0b74de;
+      --gap:14px; --maxw:980px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%; margin:0; background:var(--bg); color:#111;}
+    .wrap{max-width:var(--maxw); margin:28px auto; padding:20px; box-sizing:border-box;}
+    header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+    h1{margin:0;font-size:20px;}
+    .subtitle{color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns: 320px 1fr; gap:var(--gap);}
+    @media (max-width:760px){ .grid{grid-template-columns:1fr;} .aside{order:2} }
+    .card{background:var(--card);border-radius:10px;padding:14px;box-shadow:0 1px 0 rgba(0,0,0,.04);}
+    .aside .card{position:sticky;top:20px}
+    label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+    input[type="text"], input[type="url"], textarea, select {
+      width:100%;padding:8px;border:1px solid #e6e9ee;border-radius:8px;font-size:14px;box-sizing:border-box;
+    }
+    .row{display:flex;gap:8px}
+    .btn{background:var(--accent);color:white;padding:8px 12px;border:none;border-radius:8px;cursor:pointer;font-weight:600}
+    .btn.ghost{background:transparent;color:var(--accent);border:1px solid #e6eefc}
+    .small{font-size:13px;padding:6px 10px;border-radius:8px}
+    .list{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+    .item{padding:10px;border-radius:8px;border:1px solid #f0f0f2;background:#fff;display:flex;flex-direction:column;gap:6px}
+    .meta{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .tags{display:flex;gap:6px;flex-wrap:wrap}
+    .tag{background:#eef6ff;color:var(--accent);padding:4px 8px;border-radius:999px;font-size:12px}
+    .muted{color:var(--muted);font-size:13px}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .footer{margin-top:18px;color:var(--muted);font-size:13px}
+    .search{display:flex;gap:8px;margin-bottom:12px}
+    .search input{flex:1}
+    pre{white-space:pre-wrap;word-break:break-word;background:#0f1724;color:#f8fafc;padding:8px;border-radius:6px;overflow:auto}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>My English Links</h1>
+        <div class="subtitle">Minimal bookmark hub for learning English, coding & job hunting — local-first demo</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <button id="btnDemo" class="btn small">Use demo data</button>
+        <button id="btnClear" class="small btn ghost">Clear all</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- Sidebar -->
+      <aside class="aside">
+        <div class="card">
+          <label>Quick Add Bookmark</label>
+          <input id="inputUrl" type="url" placeholder="https://example.com" />
+          <input id="inputTitle" type="text" placeholder="Title (optional)" style="margin-top:8px"/>
+          <input id="inputTags" type="text" placeholder="tags (comma separated)" style="margin-top:8px"/>
+          <textarea id="inputNote" rows="3" placeholder="Short note / why saved" style="margin-top:8px"></textarea>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button id="btnAdd" class="btn">Add</button>
+            <button id="btnAddOpen" class="small btn ghost">Add & Open</button>
+          </div>
+
+          <div class="controls" style="margin-top:12px">
+            <button id="btnExport" class="small btn ghost">Export JSON</button>
+            <label for="fileImport" class="small btn ghost" style="cursor:pointer">Import JSON</label>
+            <input id="fileImport" type="file" accept="application/json" style="display:none" />
+          </div>
+
+          <div style="margin-top:12px">
+            <label>Filter by tag</label>
+            <input id="filterTag" type="text" placeholder="type tag or leave empty" />
+          </div>
+
+          <div style="margin-top:12px">
+            <label>Search</label>
+            <input id="filterText" type="text" placeholder="search title, url, note" />
+          </div>
+
+          <div class="footer">
+            Local demo — data stored in browser. Sign-in / sync not included in this simple demo.
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <main>
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <strong>Bookmarks</strong>
+              <div class="muted" id="countInfo">0 saved</div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input id="searchTop" type="text" placeholder="Quick search..." style="min-width:220px;padding:8px;border-radius:8px;border:1px solid #e6e9ee"/>
+              <button id="btnFocusAdd" class="small btn ghost">Quick add</button>
+            </div>
+          </div>
+
+          <div id="list" class="list" aria-live="polite" style="margin-top:12px"></div>
+
+          <div style="margin-top:12px;display:flex;justify-content:flex-end">
+            <button id="btnImportSample" class="small btn">Load Sample</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <strong>Jobs (simple tracker)</strong>
+          <div class="muted" style="margin-top:6px">Save job links and track stages.</div>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <input id="jobTitle" type="text" placeholder="Company - Role" />
+            <input id="jobUrl" type="url" placeholder="job url" />
+            <select id="jobStage">
+              <option value="applied">applied</option>
+              <option value="interview">interview</option>
+              <option value="offer">offer</option>
+              <option value="closed">closed</option>
+            </select>
+            <button id="btnAddJob" class="btn small">Add</button>
+          </div>
+
+          <div id="jobsList" class="list" style="margin-top:10px"></div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <strong>Notes & Quick Reference</strong>
+          <div class="muted" style="margin-top:6px">Use this panel to jot short tips (local storage).</div>
+          <textarea id="quickNotes" rows="4" placeholder="Weekly plan, reminders..."></textarea>
+          <div style="margin-top:8px;display:flex;justify-content:flex-end">
+            <button id="saveNotes" class="small btn ghost">Save notes</button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <footer style="margin-top:18px;text-align:center;color:var(--muted);font-size:13px">
+      Built for personal learning · demo only · data stays in your browser
+    </footer>
+  </div>
+
+  <script>
+    // Minimal app: bookmarks + jobs stored in localStorage.
+    const LS_KEY = 'myenglishlinks_v1';
+    const LS_JOBS = 'myenglishjobs_v1';
+    const LS_NOTES = 'myenglishnotes_v1';
+
+    // elements
+    const inputUrl = document.getElementById('inputUrl');
+    const inputTitle = document.getElementById('inputTitle');
+    const inputTags = document.getElementById('inputTags');
+    const inputNote = document.getElementById('inputNote');
+    const btnAdd = document.getElementById('btnAdd');
+    const btnAddOpen = document.getElementById('btnAddOpen');
+    const listEl = document.getElementById('list');
+    const countInfo = document.getElementById('countInfo');
+    const filterTag = document.getElementById('filterTag');
+    const filterText = document.getElementById('filterText');
+    const searchTop = document.getElementById('searchTop');
+    const btnExport = document.getElementById('btnExport');
+    const fileImport = document.getElementById('fileImport');
+    const btnClear = document.getElementById('btnClear');
+    const btnDemo = document.getElementById('btnDemo');
+    const btnImportSample = document.getElementById('btnImportSample');
+    const btnFocusAdd = document.getElementById('btnFocusAdd');
+
+    const jobTitle = document.getElementById('jobTitle');
+    const jobUrl = document.getElementById('jobUrl');
+    const jobStage = document.getElementById('jobStage');
+    const btnAddJob = document.getElementById('btnAddJob');
+    const jobsList = document.getElementById('jobsList');
+
+    const quickNotes = document.getElementById('quickNotes');
+    const saveNotes = document.getElementById('saveNotes');
+
+    // utils
+    function uid(){ return 'id_'+Date.now()+'_'+Math.random().toString(36).slice(2,8) }
+    function nowISO(){ return new Date().toISOString() }
+
+    // data
+    function loadBookmarks(){ return JSON.parse(localStorage.getItem(LS_KEY) || '[]') }
+    function saveBookmarks(arr){ localStorage.setItem(LS_KEY, JSON.stringify(arr)) }
+    function loadJobs(){ return JSON.parse(localStorage.getItem(LS_JOBS) || '[]') }
+    function saveJobs(arr){ localStorage.setItem(LS_JOBS, JSON.stringify(arr)) }
+    function loadNotes(){ return localStorage.getItem(LS_NOTES) || '' }
+    function saveNotesVal(v){ localStorage.setItem(LS_NOTES, v) }
+
+    // render
+    function render(){
+      const q = (filterText.value || searchTop.value || '').trim().toLowerCase()
+      const tagq = (filterTag.value || '').trim().toLowerCase()
+      let items = loadBookmarks().slice().reverse() // newest first
+      if(q) items = items.filter(it => (it.title+it.url+it.note+(it.tags||'')).toLowerCase().includes(q))
+      if(tagq) items = items.filter(it => (it.tags||[]).map(t=>t.toLowerCase()).includes(tagq))
+      listEl.innerHTML = ''
+      items.forEach(it=>{
+        const el = document.createElement('div'); el.className='item'
+        const title = document.createElement('div'); title.style.display='flex'; title.style.gap='10px'; title.style.alignItems='center'
+        const a = document.createElement('a'); a.href = it.url; a.textContent = it.title || it.url; a.target='_blank'
+        a.style.fontWeight = 600; a.style.color = 'var(--accent)'
+        title.appendChild(a)
+        const meta = document.createElement('div'); meta.className='meta muted'
+        meta.innerHTML = `<span>${new Date(it.created_at).toLocaleString()}</span><span>${it.source||''}</span>`
+        el.appendChild(title)
+        if(it.note) { const p = document.createElement('div'); p.textContent = it.note; p.className='muted'; el.appendChild(p) }
+        if(it.tags && it.tags.length){
+          const tags = document.createElement('div'); tags.className='tags'
+          it.tags.forEach(t => { const tg=document.createElement('span'); tg.className='tag'; tg.textContent=t; tags.appendChild(tg) })
+          el.appendChild(tags)
+        }
+        el.appendChild(meta)
+        // actions
+        const actions = document.createElement('div'); actions.style.display='flex'; actions.style.gap='8px'; actions.style.marginTop='8px'
+        const btnDel = document.createElement('button'); btnDel.className='small btn ghost'; btnDel.textContent='Delete'
+        btnDel.onclick = ()=>{ deleteBookmark(it.id) }
+        const btnEdit = document.createElement('button'); btnEdit.className='small btn ghost'; btnEdit.textContent='Edit'
+        btnEdit.onclick = ()=>{ editBookmark(it) }
+        actions.appendChild(btnEdit); actions.appendChild(btnDel)
+        el.appendChild(actions)
+
+        listEl.appendChild(el)
+      })
+      countInfo.textContent = `${items.length} shown · ${loadBookmarks().length} total`
+      renderJobs()
+    }
+
+    function renderJobs(){
+      jobsList.innerHTML = ''
+      const jobs = loadJobs().slice().reverse()
+      jobs.forEach(j=>{
+        const el=document.createElement('div'); el.className='item'
+        const a=document.createElement('a'); a.href=j.url; a.textContent=j.title || j.url; a.target='_blank'; a.style.fontWeight=600;color='var(--accent)'
+        const meta = document.createElement('div'); meta.className='meta muted'
+        meta.innerHTML = `<span>${j.stage}</span><span>${j.applied_at||''}</span>`
+        el.appendChild(a); if(j.note){ const p=document.createElement('div'); p.className='muted'; p.textContent=j.note; el.appendChild(p) }
+        el.appendChild(meta)
+        const del=document.createElement('button'); del.className='small btn ghost'; del.textContent='Delete'; del.onclick=()=>{ deleteJob(j.id) }
+        el.appendChild(del)
+        jobsList.appendChild(el)
+      })
+    }
+
+    // actions
+    function addBookmark({url,title,tags,note,source}){
+      const arr = loadBookmarks()
+      const b = { id: uid(), url, title: title||url, tags: tags||[], note: note||'', source: source||'', created_at: nowISO() }
+      arr.push(b); saveBookmarks(arr); render()
+      return b
+    }
+    function deleteBookmark(id){
+      const arr = loadBookmarks().filter(x=>x.id!==id); saveBookmarks(arr); render()
+    }
+    function editBookmark(obj){
+      inputUrl.value = obj.url; inputTitle.value = obj.title; inputTags.value = (obj.tags||[]).join(',');
+      inputNote.value = obj.note;
+      // delete original and let user 'Add' to save new
+      deleteBookmark(obj.id)
+      window.scrollTo({top:0,behavior:'smooth'})
+    }
+
+    function addJob(){ 
+      const arr = loadJobs()
+      const j = { id: uid(), title: jobTitle.value || jobUrl.value, url: jobUrl.value, stage: jobStage.value, applied_at: (new Date()).toLocaleDateString(), note: '' }
+      arr.push(j); saveJobs(arr); jobTitle.value=''; jobUrl.value=''; render()
+    }
+    function deleteJob(id){ saveJobs(loadJobs().filter(x=>x.id!==id)); render() }
+
+    // import/export
+    btnExport.onclick = ()=>{
+      const data = { bookmarks: loadBookmarks(), jobs: loadJobs(), notes: loadNotes() }
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'})
+      const url = URL.createObjectURL(blob)
+      const a=document.createElement('a'); a.href=url; a.download='myenglishlinks.json'; a.click(); URL.revokeObjectURL(url)
+    }
+    fileImport.onchange = e=>{
+      const f = e.target.files[0]; if(!f) return
+      const reader = new FileReader()
+      reader.onload = ev=>{
+        try{
+          const d = JSON.parse(ev.target.result)
+          if(d.bookmarks && Array.isArray(d.bookmarks)){
+            const exist = loadBookmarks(); const merged = exist.concat(d.bookmarks.map(b=>({...b,id:uid()})))
+            saveBookmarks(merged)
+          }
+          if(d.jobs && Array.isArray(d.jobs)){ const merged=loadJobs().concat(d.jobs.map(j=>({...j,id:uid()}))); saveJobs(merged) }
+          if(d.notes) saveNotesVal(d.notes)
+          render()
+          alert('Import done')
+        }catch(err){ alert('Invalid JSON') }
+      }
+      reader.readAsText(f)
+      fileImport.value=''
+    }
+
+    // extras
+    btnAdd.onclick = ()=>{
+      const url = inputUrl.value.trim(); if(!url) return alert('Enter URL')
+      const tags = inputTags.value.split(',').map(s=>s.trim()).filter(Boolean)
+      addBookmark({url, title: inputTitle.value.trim(), tags, note: inputNote.value.trim(), source: 'manual'})
+      inputUrl.value=''; inputTitle.value=''; inputTags.value=''; inputNote.value=''
+    }
+    btnAddOpen.onclick = ()=>{
+      btnAdd.onclick(); // add
+      const last = loadBookmarks().slice(-1)[0]; if(last) window.open(last.url,'_blank')
+    }
+    btnImportSample.onclick = ()=>{
+      const sample = [
+        {id:uid(), url:'https://developer.mozilla.org', title:'MDN Web Docs', tags:['reference','web'], note:'HTML/CSS/JS docs', created_at:nowISO()},
+        {id:uid(), url:'https://news.ycombinator.com', title:'Hacker News', tags:['news','startup'], note:'Tech headlines', created_at:nowISO()},
+        {id:uid(), url:'https://dev.to', title:'DEV Community', tags:['community'], note:'Articles & tutorials', created_at:nowISO()}
+      ]
+      saveBookmarks(sample); render()
+    }
+
+    btnClear.onclick = ()=>{
+      if(confirm('Clear all local data?')){ localStorage.removeItem(LS_KEY); localStorage.removeItem(LS_JOBS); localStorage.removeItem(LS_NOTES); render() }
+    }
+    btnDemo.onclick = ()=>{ btnImportSample.onclick() }
+
+    filterTag.oninput = render
+    filterText.oninput = render
+    searchTop.oninput = render
+    btnFocusAdd.onclick = ()=>{ inputUrl.focus() }
+
+    // jobs
+    btnAddJob.onclick = addJob
+
+    // notes
+    saveNotes.onclick = ()=>{ saveNotesVal(quickNotes.value); alert('Saved') }
+
+    // load existing notes
+    quickNotes.value = loadNotes()
+
+    // initial render
+    render()
+
+    // keyboard shortcuts: Ctrl+K focus search
+    document.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='k'){ e.preventDefault(); searchTop.focus(); }
+    })
+  </script>
+</body>
+</html>
